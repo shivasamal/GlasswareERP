@@ -29,6 +29,7 @@ import PurchaseDashboard from './modules/Purchase/Dashboard'
 import PurchaseSuppliers from './modules/Purchase/Suppliers'
 import PurchaseOrders from './modules/Purchase/Orders'
 import PurchaseReceipts from './modules/Purchase/Receipts'
+import PurchaseInspection from './modules/Purchase/Inspection'
 import PurchasePayments from './modules/Purchase/Payments'
 
 import HRDashboard from './modules/HR/Dashboard'
@@ -81,6 +82,7 @@ function App() {
               <Route path="purchase/suppliers" element={<PurchaseSuppliers />} />
               <Route path="purchase/orders" element={<PurchaseOrders />} />
               <Route path="purchase/receipts" element={<PurchaseReceipts />} />
+              <Route path="purchase/inspection" element={<PurchaseInspection />} />
               <Route path="purchase/payments" element={<PurchasePayments />} />
               
               {/* HR Routes */}

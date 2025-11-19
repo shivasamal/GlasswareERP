@@ -34,6 +34,7 @@ const Sidebar = () => {
       { path: '/purchase/suppliers', label: 'Suppliers' },
       { path: '/purchase/orders', label: 'Purchase Orders' },
       { path: '/purchase/receipts', label: 'Receipts' },
+      { path: '/purchase/inspection', label: 'Inspection' },
       { path: '/purchase/payments', label: 'Payments' }
     ]},
     { path: '/hr', icon: Users, label: 'HR & Payroll', module: 'hr', submenu: [

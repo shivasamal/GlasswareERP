@@ -62,8 +62,50 @@ You manufacture base glassware products (e.g., RBR-117 Round Bottom Flask). Cust
 1. When components arrive, go to **Purchase → Receipts**
 2. Mark purchase order as "received"
 3. System automatically:
+   - Creates Purchase Receipt (REC-2024-XXX)
+   - Generates GRN Number (Goods Receipt Note)
+   - Records receipt date and received by information
    - Updates component inventory
    - Updates Production Order component status to "available"
+   - Sets receipt status to "complete" (ready for inspection)
+
+### Step 4.1: Inspect Received Items (Purchase Module)
+
+1. Go to **Purchase → Inspection**
+2. View receipts pending inspection
+3. Click "Start Inspection" on any receipt
+4. For each item, check:
+   - **Quantity Verification**: Compare ordered vs received quantities
+   - **Quality Check**: Inspect for damage or defects
+   - **Item Verification**: Verify correct items were received
+   - **Quantity Accuracy**: Check if quantities match order
+5. Fill inspection form:
+   - Enter inspected quantity
+   - Mark passed quantity (items in good condition)
+   - Mark damaged quantity (if any)
+   - Check "Wrong Item" if incorrect item received
+   - Check "Wrong Quantity" if quantity doesn't match
+   - Add damage/issue description (required if issues found)
+   - Add inspection notes
+6. Submit inspection
+7. System automatically:
+   - Updates inspection status (Passed, Partial, Failed)
+   - Records inspection date and inspector name
+   - Creates damage claims for any issues found
+   - Generates claim numbers (CLM-XXX)
+
+### Step 4.2: Handle Damage Claims (Purchase Module)
+
+1. After inspection, if issues found:
+   - System creates claims automatically
+   - View claims in **Purchase → Inspection → Damage Claims**
+2. For each claim:
+   - Review claim details (item, quantity, issue description)
+   - Click "Request Replacement" button
+   - System creates replacement purchase order
+   - Replacement order linked to original claim
+3. Send replacement order to supplier
+4. Track replacement status until resolved
 
 ### Step 5: Start Production (Production Module)
 
@@ -75,6 +117,31 @@ You manufacture base glassware products (e.g., RBR-117 Round Bottom Flask). Cust
    - Creates Batch ID (BATCH-2024-XXX)
    - Sets status to "in_progress"
    - Records start date
+   - Initializes batch tracking with production phases
+
+### Step 5.1: Track Batch Progress (Production Module)
+
+1. Go to **Production → Batches**
+2. Click on any **Batch ID** to view detailed tracking
+3. View production phases timeline:
+   - **Material Preparation**: ✓ Gathering components and raw materials
+   - **Manufacturing**: 🔄 Production and assembly process (Current Phase)
+   - **Quality Control**: ⏳ Inspection and testing
+   - **Packaging**: ⏳ Final packaging and labeling
+   - **Completed**: ⏳ Ready for shipment
+4. Features:
+   - Visual timeline with current phase highlighted
+   - Progress percentage indicator (circular progress)
+   - Phase status indicators (completed ✓, in progress 🔄, pending ⏳)
+   - Start and completion dates for each phase
+   - Add notes about batch progress, issues, or observations
+   - View component availability and order information
+   - Track customization requirements
+5. Add notes:
+   - Click "Add Note" button
+   - Enter notes about production progress
+   - Notes are timestamped with author name
+   - Useful for tracking issues, delays, or observations
 
 ### Step 6: Quality Control (Production Module)
 
@@ -111,10 +178,30 @@ You manufacture base glassware products (e.g., RBR-117 Round Bottom Flask). Cust
 
 1. Go to **Sales → Invoices**
 2. Invoice is automatically generated
-3. System:
-   - Creates invoice number
+3. Click the **View icon** (Eye) on any invoice to see:
+   - **Professional Invoice View**: Complete invoice document showing:
+     - Company details (name, address, GSTIN, PAN)
+     - Customer billing and shipping information
+     - Invoice number and formatted date
+     - Detailed line items with:
+       - Product codes and descriptions
+       - Quantities and unit prices
+       - Customization notes (if applicable)
+       - Item totals
+     - Tax calculations (GST 18%)
+     - Subtotal, tax, and total amounts
+     - Terms & conditions
+     - Payment status badge
+     - Authorized signature section
+   - **Invoice Details**: Additional tracking information
+     - Created by and creation date
+     - Last updated by and update date
+     - Order number and customer details
+4. System:
+   - Creates invoice number (INV-XXX)
    - Links to sales order
    - Updates Accounts Receivable
+   - Displays invoice in professional format for better understanding
 
 ## Example Scenario
 
@@ -147,6 +234,15 @@ You manufacture base glassware products (e.g., RBR-117 Round Bottom Flask). Cust
 6. **Shipment**:
    - 48 units shipped to Client 1
    - Status: Delivered
+
+7. **Invoice Generated**:
+   - Invoice Number: INV-SO-2024-001
+   - Click View icon to see professional invoice with:
+     - Complete company and customer details
+     - Line items with customization notes
+     - GST calculation (18%)
+     - Total amount
+     - Payment status
 
 ### Scenario: Client 2 orders 100 units of RB-121 and 50 units of RB-122
 
@@ -200,10 +296,33 @@ You manufacture base glassware products (e.g., RBR-117 Round Bottom Flask). Cust
 3. **Purchase Order Integration**: Missing components automatically trigger purchase order suggestions
 
 4. **Batch Tracking**: Each production run gets unique batch ID for traceability
+   - Visual production phase timeline
+   - Real-time progress tracking with percentage
+   - Current phase indicator
+   - Notes and observations tracking
+   - Component and order information display
+   - Click on Batch ID to view detailed tracking
 
 5. **Quality Control**: Track pass/fail rates and move failed items to damaged inventory
 
 6. **End-to-End Visibility**: Track order from customer request to delivery
+
+7. **Professional Invoice Display**: View invoices in a professional format with complete details, tax calculations, and line items for better understanding
+
+8. **Purchase Receipt Management**: Comprehensive receipt tracking with:
+   - Receipt numbers and GRN (Goods Receipt Note) numbers
+   - Supplier invoice tracking
+   - Item-level quantity verification (ordered vs received)
+   - Received by tracking
+   - Notes and remarks
+
+9. **Purchase Inspection System**: Quality control for received items
+   - Inspect received items for damage, correctness, and quality
+   - Track inspected, passed, and damaged quantities
+   - Report wrong items or quantities
+   - Automatic claim generation for issues
+   - Replacement order creation from claims
+   - Inspection reports and documentation
 
 ## Dashboard Insights
 

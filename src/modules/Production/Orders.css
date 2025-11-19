@@ -208,6 +208,38 @@
   max-width: 800px;
 }
 
+.modal-content.invoice-modal {
+  max-width: 1000px;
+  width: 95%;
+  padding: 24px;
+}
+
+.modal-content.batch-modal {
+  max-width: 1200px;
+  width: 95%;
+  max-height: 95vh;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.batch-id-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: all 0.2s;
+  padding: 0;
+  font-size: inherit;
+}
+
+.batch-id-link:hover {
+  color: #1d4ed8;
+  text-decoration-color: #1d4ed8;
+}
+
 .modal-content h2 {
   font-size: 24px;
   font-weight: 600;

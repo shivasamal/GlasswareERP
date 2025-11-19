@@ -153,6 +153,168 @@ export const purchaseOrders = [
     totalAmount: 2500,
     status: 'ordered',
     expectedDelivery: '2024-01-20'
+  },
+  {
+    id: 2,
+    orderNumber: 'PUO-2024-002',
+    supplierId: 1,
+    supplierName: 'Glass Components Ltd',
+    date: '2024-01-05',
+    items: [
+      { componentCode: 'OUT-002', componentName: 'Double Outlet Tube', quantity: 50, unitPrice: 45, total: 2250, status: 'received' }
+    ],
+    totalAmount: 2250,
+    status: 'received',
+    expectedDelivery: '2024-01-15',
+    receivedDate: '2024-01-14',
+    receivedBy: 'Amit Patel'
+  },
+  {
+    id: 3,
+    orderNumber: 'PUO-2024-003',
+    supplierId: 2,
+    supplierName: 'Precision Glass Works',
+    date: '2024-01-08',
+    items: [
+      { componentCode: 'NECK-001', componentName: 'Additional Neck Joint', quantity: 75, unitPrice: 35, total: 2625, status: 'received' },
+      { componentCode: 'CAP-001', componentName: 'Flask Cap', quantity: 100, unitPrice: 15, total: 1500, status: 'received' }
+    ],
+    totalAmount: 4125,
+    status: 'received',
+    expectedDelivery: '2024-01-18',
+    receivedDate: '2024-01-17',
+    receivedBy: 'Amit Patel'
+  },
+  {
+    id: 4,
+    orderNumber: 'PUO-2024-004',
+    supplierId: 3,
+    supplierName: 'Packaging Solutions Inc',
+    date: '2024-01-12',
+    items: [
+      { componentCode: 'PKG-001', componentName: 'Bubble Wrap', quantity: 200, unitPrice: 2, total: 400, status: 'received' },
+      { componentCode: 'PKG-002', componentName: 'Cardboard Box Small', quantity: 150, unitPrice: 10, total: 1500, status: 'received' },
+      { componentCode: 'PKG-004', componentName: 'Foam Padding', quantity: 100, unitPrice: 3, total: 300, status: 'received' }
+    ],
+    totalAmount: 2200,
+    status: 'received',
+    expectedDelivery: '2024-01-22',
+    receivedDate: '2024-01-21',
+    receivedBy: 'Amit Patel'
+  },
+  {
+    id: 5,
+    orderNumber: 'PUO-2024-005',
+    supplierId: 1,
+    supplierName: 'Glass Components Ltd',
+    date: '2024-01-20',
+    items: [
+      { componentCode: 'OUT-001', componentName: 'Single Outlet Tube', quantity: 200, unitPrice: 25, total: 5000, status: 'received' }
+    ],
+    totalAmount: 5000,
+    status: 'received',
+    expectedDelivery: '2024-01-30',
+    receivedDate: '2024-01-28',
+    receivedBy: 'Rajesh Kumar'
+  }
+]
+
+// Purchase Receipts (dedicated receipts data)
+export const purchaseReceipts = [
+  {
+    id: 1,
+    receiptNumber: 'REC-2024-002',
+    orderNumber: 'PUO-2024-002',
+    supplierId: 1,
+    supplierName: 'Glass Components Ltd',
+    date: '2024-01-14',
+    receivedDate: '2024-01-14',
+    receivedBy: 'Amit Patel',
+    items: [
+      { componentCode: 'OUT-002', componentName: 'Double Outlet Tube', quantity: 50, unitPrice: 45, total: 2250, receivedQuantity: 50 }
+    ],
+    totalAmount: 2250,
+    status: 'complete',
+    notes: 'All items received in good condition',
+    invoiceNumber: 'INV-SUP-2024-002',
+    grnNumber: 'GRN-2024-002'
+  },
+  {
+    id: 2,
+    receiptNumber: 'REC-2024-003',
+    orderNumber: 'PUO-2024-003',
+    supplierId: 2,
+    supplierName: 'Precision Glass Works',
+    date: '2024-01-17',
+    receivedDate: '2024-01-17',
+    receivedBy: 'Amit Patel',
+    items: [
+      { componentCode: 'NECK-001', componentName: 'Additional Neck Joint', quantity: 75, unitPrice: 35, total: 2625, receivedQuantity: 75 },
+      { componentCode: 'CAP-001', componentName: 'Flask Cap', quantity: 100, unitPrice: 15, total: 1500, receivedQuantity: 100 }
+    ],
+    totalAmount: 4125,
+    status: 'complete',
+    notes: 'Received as per order specification',
+    invoiceNumber: 'INV-SUP-2024-003',
+    grnNumber: 'GRN-2024-003'
+  },
+  {
+    id: 3,
+    receiptNumber: 'REC-2024-004',
+    orderNumber: 'PUO-2024-004',
+    supplierId: 3,
+    supplierName: 'Packaging Solutions Inc',
+    date: '2024-01-21',
+    receivedDate: '2024-01-21',
+    receivedBy: 'Amit Patel',
+    items: [
+      { componentCode: 'PKG-001', componentName: 'Bubble Wrap', quantity: 200, unitPrice: 2, total: 400, receivedQuantity: 200 },
+      { componentCode: 'PKG-002', componentName: 'Cardboard Box Small', quantity: 150, unitPrice: 10, total: 1500, receivedQuantity: 150 },
+      { componentCode: 'PKG-004', componentName: 'Foam Padding', quantity: 100, unitPrice: 3, total: 300, receivedQuantity: 100 }
+    ],
+    totalAmount: 2200,
+    status: 'complete',
+    notes: 'Packaging materials received. Quality check passed.',
+    invoiceNumber: 'INV-SUP-2024-004',
+    grnNumber: 'GRN-2024-004'
+  },
+  {
+    id: 4,
+    receiptNumber: 'REC-2024-005',
+    orderNumber: 'PUO-2024-005',
+    supplierId: 1,
+    supplierName: 'Glass Components Ltd',
+    date: '2024-01-28',
+    receivedDate: '2024-01-28',
+    receivedBy: 'Rajesh Kumar',
+    items: [
+      { componentCode: 'OUT-001', componentName: 'Single Outlet Tube', quantity: 200, unitPrice: 25, total: 5000, receivedQuantity: 200 }
+    ],
+    totalAmount: 5000,
+    status: 'complete',
+    inspectionStatus: null,
+    notes: 'Components received early. Awaiting inspection.',
+    invoiceNumber: 'INV-SUP-2024-005',
+    grnNumber: 'GRN-2024-005'
+  },
+  {
+    id: 5,
+    receiptNumber: 'REC-2024-006',
+    orderNumber: 'PUO-2024-001',
+    supplierId: 1,
+    supplierName: 'Glass Components Ltd',
+    date: '2024-01-20',
+    receivedDate: '2024-01-20',
+    receivedBy: 'Amit Patel',
+    items: [
+      { componentCode: 'OUT-001', componentName: 'Single Outlet Tube', quantity: 100, unitPrice: 25, total: 2500, receivedQuantity: 100 }
+    ],
+    totalAmount: 2500,
+    status: 'complete',
+    inspectionStatus: null,
+    notes: 'Items received. Inspection pending.',
+    invoiceNumber: 'INV-SUP-2024-001',
+    grnNumber: 'GRN-2024-001'
   }
 ]
 
@@ -189,5 +351,6 @@ export const getCustomers = () => customers
 export const getSalesOrders = () => salesOrders
 export const getProductionOrders = () => productionOrders
 export const getPurchaseOrders = () => purchaseOrders
+export const getPurchaseReceipts = () => purchaseReceipts
 export const getEmployees = () => employees
 

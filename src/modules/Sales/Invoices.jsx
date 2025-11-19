@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Eye, Download, Plus, Edit, User, Clock } from 'lucide-react'
-import { getSalesOrders } from '../../data/staticData'
+import { getSalesOrders, getCustomers } from '../../data/staticData'
 import { useAuth } from '../../contexts/AuthContext'
+import InvoiceView from '../../components/InvoiceView'
 import '../../modules/Production/Orders.css'
 
 const SalesInvoices = () => {
   const { user } = useAuth()
   const [orders] = useState(getSalesOrders())
+  const customers = getCustomers()
   const [invoices, setInvoices] = useState(
     orders.map(order => ({
       id: order.id,
@@ -92,6 +94,14 @@ const SalesInvoices = () => {
     setSelectedInvoice(null)
   }
 
+  // Get order and customer details for selected invoice
+  const getInvoiceDetails = () => {
+    if (!selectedInvoice) return { order: null, customer: null }
+    const order = orders.find(o => o.orderNumber === selectedInvoice.orderNumber)
+    const customer = customers.find(c => c.name === selectedInvoice.customerName || c.id === order?.customerId)
+    return { order, customer }
+  }
+
   return (
     <div className="orders-page">
       <div className="page-header">
@@ -157,52 +167,67 @@ const SalesInvoices = () => {
         </table>
       </div>
 
-      {showModal && selectedInvoice && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Invoice Details</h2>
-            <div className="order-detail-view">
-              <div className="detail-section">
-                <h3>Invoice Information</h3>
-                <p><strong>Invoice Number:</strong> {selectedInvoice.invoiceNumber}</p>
-                <p><strong>Order Number:</strong> {selectedInvoice.orderNumber}</p>
-                <p><strong>Customer:</strong> {selectedInvoice.customerName}</p>
-                <p><strong>Date:</strong> {selectedInvoice.date}</p>
-                <p><strong>Amount:</strong> ₹{selectedInvoice.amount.toLocaleString()}</p>
-                <p><strong>Status:</strong> {selectedInvoice.status}</p>
+      {showModal && selectedInvoice && (() => {
+        const { order, customer } = getInvoiceDetails()
+        
+        return (
+          <div className="modal-overlay" onClick={() => setShowModal(false)}>
+            <div className="modal-content invoice-modal" onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h2>Invoice View</h2>
+                <button className="btn-secondary" onClick={() => setShowModal(false)}>Close</button>
               </div>
-              <div className="detail-section" style={{ marginTop: '16px' }}>
-                <h3>Tracking Information</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <User size={16} />
-                  <div>
-                    <p><strong>Created By:</strong> {selectedInvoice.createdBy}</p>
-                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                      <Clock size={12} style={{ display: 'inline', marginRight: '4px' }} />
-                      Created on: {selectedInvoice.createdAt}
-                    </p>
-                  </div>
+              
+              {/* Invoice View */}
+              <div style={{ marginBottom: '30px', border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden' }}>
+                <InvoiceView 
+                  invoice={selectedInvoice} 
+                  order={order} 
+                  customer={customer}
+                />
+              </div>
+
+              {/* Invoice Details Section */}
+              <div className="order-detail-view">
+                <div className="detail-section">
+                  <h3>Invoice Information</h3>
+                  <p><strong>Invoice Number:</strong> {selectedInvoice.invoiceNumber}</p>
+                  <p><strong>Order Number:</strong> {selectedInvoice.orderNumber}</p>
+                  <p><strong>Customer:</strong> {selectedInvoice.customerName}</p>
+                  <p><strong>Date:</strong> {selectedInvoice.date}</p>
+                  <p><strong>Amount:</strong> ₹{selectedInvoice.amount.toLocaleString()}</p>
+                  <p><strong>Status:</strong> {selectedInvoice.status}</p>
                 </div>
-                {selectedInvoice.updatedBy && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+                <div className="detail-section" style={{ marginTop: '16px' }}>
+                  <h3>Tracking Information</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                     <User size={16} />
                     <div>
-                      <p><strong>Last Updated By:</strong> {selectedInvoice.updatedBy}</p>
+                      <p><strong>Created By:</strong> {selectedInvoice.createdBy}</p>
                       <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                         <Clock size={12} style={{ display: 'inline', marginRight: '4px' }} />
-                        Updated on: {selectedInvoice.updatedAt}
+                        Created on: {selectedInvoice.createdAt}
                       </p>
                     </div>
                   </div>
-                )}
+                  {selectedInvoice.updatedBy && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+                      <User size={16} />
+                      <div>
+                        <p><strong>Last Updated By:</strong> {selectedInvoice.updatedBy}</p>
+                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                          <Clock size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                          Updated on: {selectedInvoice.updatedAt}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="modal-actions">
-              <button className="btn-secondary" onClick={() => setShowModal(false)}>Close</button>
-            </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {showCreateModal && (
         <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
