@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/AuthContext' // Still needed for mock hasAccess
 import {
   LayoutDashboard, Package, Factory, ShoppingCart, ShoppingBag,
   Users, DollarSign, BarChart3, Menu, X
@@ -8,7 +8,8 @@ import { useState } from 'react'
 import './Sidebar.css'
 
 const Sidebar = () => {
-  const { hasAccess } = useAuth()
+  // COMMENTED OUT FOR STATIC HOSTING - hasAccess now always returns true
+  const { hasAccess } = useAuth() // Returns function that always returns true for static hosting
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const menuItems = [
@@ -52,7 +53,9 @@ const Sidebar = () => {
     { path: '/analytics', icon: BarChart3, label: 'Analytics', module: 'analytics' }
   ]
 
-  const filteredMenuItems = menuItems.filter(item => hasAccess(item.module))
+  // COMMENTED OUT FOR STATIC HOSTING - Show all menu items
+  // const filteredMenuItems = menuItems.filter(item => hasAccess(item.module))
+  const filteredMenuItems = menuItems // Show all items for static hosting
 
   return (
     <>

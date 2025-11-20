@@ -1,10 +1,11 @@
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/AuthContext' // Still needed for mock user data
 import { useTheme } from '../contexts/ThemeContext'
 import { Moon, Sun, LogOut, User } from 'lucide-react'
 import './Header.css'
 
 const Header = () => {
-  const { user, logout } = useAuth()
+  // COMMENTED OUT FOR STATIC HOSTING - Using mock auth values
+  const { user, logout } = useAuth() // Returns mock user for static hosting
   const { theme, toggleTheme } = useTheme()
 
   return (
