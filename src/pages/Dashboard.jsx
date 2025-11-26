@@ -1,4 +1,4 @@
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/AuthContext' // Still needed for mock user data
 import { useNavigate } from 'react-router-dom'
 import {
   Package, Factory, ShoppingCart, ShoppingBag, Users,
@@ -9,7 +9,8 @@ import { getDashboardStats } from '../data/staticData'
 import './Dashboard.css'
 
 const Dashboard = () => {
-  const { user, hasAccess } = useAuth()
+  // COMMENTED OUT FOR STATIC HOSTING - Using mock auth values
+  const { user, hasAccess } = useAuth() // Returns mock user and hasAccess that always returns true
   const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [selectedPeriod, setSelectedPeriod] = useState('month')
@@ -28,7 +29,9 @@ const Dashboard = () => {
     { path: '/analytics', icon: BarChart3, label: 'Analytics', color: '#6366f1', module: 'analytics' }
   ]
 
-  const accessibleModules = modules.filter(m => hasAccess(m.module))
+  // COMMENTED OUT FOR STATIC HOSTING - Show all modules
+  // const accessibleModules = modules.filter(m => hasAccess(m.module))
+  const accessibleModules = modules // Show all modules for static hosting
 
   if (!stats) return <div>Loading...</div>
 
