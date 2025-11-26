@@ -1,11 +1,11 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
-// import { AuthProvider } from './contexts/AuthContext' // COMMENTED OUT FOR STATIC HOSTING
+import { AuthProvider } from './contexts/AuthContext'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Layout from './components/Layout'
-// import ProtectedRoute from './components/ProtectedRoute' // COMMENTED OUT FOR STATIC HOSTING
+import ProtectedRoute from './components/ProtectedRoute'
 
 // Module imports
 import InventoryDashboard from './modules/Inventory/Dashboard'
@@ -49,12 +49,11 @@ import AnalyticsDashboard from './modules/Analytics/Dashboard'
 function App() {
   return (
     <ThemeProvider>
-      {/* <AuthProvider> COMMENTED OUT FOR STATIC HOSTING */}
+      <AuthProvider>
         <Router basename="/GlasswareERP">
           <Routes>
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}> COMMENTED OUT FOR STATIC HOSTING */}
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               
@@ -105,7 +104,7 @@ function App() {
             </Route>
           </Routes>
         </Router>
-      {/* </AuthProvider> COMMENTED OUT FOR STATIC HOSTING */}
+      </AuthProvider>
     </ThemeProvider>
   )
 }
