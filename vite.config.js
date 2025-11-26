@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   base: '/GlasswareERP/',
-  build: { outDir: 'docs' },
+  build: { outDir: 'dist' },
   plugins: [react()],
   server: {
     port: 3000,
