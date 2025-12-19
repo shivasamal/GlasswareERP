@@ -195,7 +195,7 @@ You manufacture base glassware products (e.g., RBR-117 Round Bottom Flask). Cust
      - Authorized signature section
    - **Invoice Details**: Additional tracking information
      - Created by and creation date
-     - Last updated by and update date
+     - Last updated by and update dat
      - Order number and customer details
 4. System:
    - Creates invoice number (INV-XXX)
