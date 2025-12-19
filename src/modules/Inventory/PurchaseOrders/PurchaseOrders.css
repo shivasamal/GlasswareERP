@@ -1,0 +1,283 @@
+.purchase-orders {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.filters select {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-row small {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.damage-alert {
+  color: #ef4444 !important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.excess-info {
+  color: #10b981 !important;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  padding: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  background: #f9fafb;
+}
+
+.modal-content.large {
+  max-width: 800px;
+}
+
+.item-form-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: end;
+}
+
+.btn-remove {
+  padding: 8px 12px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-add-item {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.file-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.file-upload input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-upload span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.inspection-content {
+  padding: 24px;
+}
+
+.received-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.quantity-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.quantity-inputs input {
+  width: 100px;
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+}
+
+.damage-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr auto;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: end;
+}
+
+.badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.text-muted {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Notifications */
+.notifications-container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-card {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification-icon {
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content strong {
+  display: block;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+
+.notification-content p {
+  margin: 0;
+  color: #78350f;
+  font-size: 14px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-primary.small {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* Excess Items Modal */
+.excess-items-content {
+  padding: 24px;
+}
+
+.info-text {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 24px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+}
+
+.excess-item-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #f9fafb;
+}
+
+.excess-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.excess-item-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.excess-badge {
+  background: #10b981;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.new-item-form {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.excess-item-card .form-group {
+  margin-bottom: 16px;
+}
+
+.excess-item-card .form-group small {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12px;
+}
+

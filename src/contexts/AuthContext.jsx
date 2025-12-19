@@ -12,9 +12,23 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
+  // Auto-login with admin user for direct dashboard access
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('user')
-    return saved ? JSON.parse(saved) : null
+    if (saved) {
+      return JSON.parse(saved)
+    }
+    // Auto-login with admin user
+    const adminUser = users.find(u => u.roleId === 1)
+    if (adminUser) {
+      const userWithRole = {
+        ...adminUser,
+        role: roles.find(r => r.id === adminUser.roleId)
+      }
+      localStorage.setItem('user', JSON.stringify(userWithRole))
+      return userWithRole
+    }
+    return null
   })
 
   const login = (email, password) => {

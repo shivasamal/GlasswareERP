@@ -1,0 +1,11 @@
+.raw-materials {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.low-stock {
+  color: #ef4444;
+  font-weight: 600;
+}
+

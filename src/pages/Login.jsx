@@ -14,10 +14,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     setError('')
-    // COMMENTED OUT FOR STATIC HOSTING - Always navigate to dashboard
+    // COMMENTED OUT FOR STATIC HOSTING - Always navigate to inventory
     const result = login(email, password) // Always returns success for static hosting
     if (result.success) {
-      navigate('/dashboard')
+      navigate('/inventory')
     } else {
       setError(result.error)
     }

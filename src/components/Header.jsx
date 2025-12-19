@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext' // Still needed for mock user data
 import { useTheme } from '../contexts/ThemeContext'
 import { Moon, Sun, LogOut, User } from 'lucide-react'
@@ -7,11 +8,18 @@ const Header = () => {
   // COMMENTED OUT FOR STATIC HOSTING - Using mock auth values
   const { user, logout } = useAuth() // Returns mock user for static hosting
   const { theme, toggleTheme } = useTheme()
+  const navigate = useNavigate()
 
   return (
     <header className="header">
       <div className="header-left">
-        <h2 className="header-title">Glassware ERP System</h2>
+        <h2 
+          className="header-title" 
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/inventory')}
+        >
+          Glassware ERP System
+        </h2>
       </div>
       <div className="header-right">
         <button className="icon-btn" onClick={toggleTheme} title="Toggle theme">

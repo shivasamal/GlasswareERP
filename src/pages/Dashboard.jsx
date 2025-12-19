@@ -1,86 +1,65 @@
-import { useAuth } from '../contexts/AuthContext' // Still needed for mock user data
 import { useNavigate } from 'react-router-dom'
 import {
-  Package, Factory, ShoppingCart, ShoppingBag, Users,
-  DollarSign, BarChart3, TrendingUp, AlertCircle
+  Package, ArrowUpDown, Users, ShoppingBag, ShoppingCart, FileText, TrendingUp, AlertCircle
 } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { getDashboardStats } from '../data/staticData'
+import { useState } from 'react'
+import { getRawMaterials, getFinishedGoods, getPurchaseOrders, getCustomerOrders } from '../data/inventoryData'
 import './Dashboard.css'
 
 const Dashboard = () => {
-  // COMMENTED OUT FOR STATIC HOSTING - Using mock auth values
-  const { user, hasAccess } = useAuth() // Returns mock user and hasAccess that always returns true
   const navigate = useNavigate()
-  const [stats, setStats] = useState(null)
-  const [selectedPeriod, setSelectedPeriod] = useState('month')
+  const [rawMaterials] = useState(getRawMaterials())
+  const [finishedGoods] = useState(getFinishedGoods())
+  const [purchaseOrders] = useState(getPurchaseOrders())
+  const [customerOrders] = useState(getCustomerOrders())
 
-  useEffect(() => {
-    setStats(getDashboardStats(selectedPeriod))
-  }, [selectedPeriod])
+  const totalSpending = purchaseOrders.reduce((sum, order) => sum + order.totalAmount, 0)
+  const totalRevenue = customerOrders.reduce((sum, order) => sum + order.totalAmount, 0)
+  const totalInventoryValue = [...rawMaterials, ...finishedGoods].reduce((sum, item) => sum + (item.stock * item.price), 0)
+  const lowStockItems = [...rawMaterials, ...finishedGoods].filter(item => item.stock <= item.minStock)
 
-  const modules = [
-    { path: '/inventory', icon: Package, label: 'Inventory', color: '#3b82f6', module: 'inventory' },
-    { path: '/production', icon: Factory, label: 'Production', color: '#10b981', module: 'production' },
-    { path: '/sales', icon: ShoppingCart, label: 'Sales', color: '#f59e0b', module: 'sales' },
-    { path: '/purchase', icon: ShoppingBag, label: 'Purchase', color: '#8b5cf6', module: 'purchase' },
-    { path: '/hr', icon: Users, label: 'HR & Payroll', color: '#ec4899', module: 'hr' },
-    { path: '/accounting', icon: DollarSign, label: 'Accounting', color: '#14b8a6', module: 'accounting' },
-    { path: '/analytics', icon: BarChart3, label: 'Analytics', color: '#6366f1', module: 'analytics' }
+  const quickActions = [
+    { path: '/inventory/raw-materials', icon: Package, label: 'Raw Materials', color: '#3b82f6' },
+    { path: '/inventory/finished-goods', icon: Package, label: 'Finished Goods', color: '#10b981' },
+    { path: '/inventory/stock-movements', icon: ArrowUpDown, label: 'Stock Movements', color: '#f59e0b' },
+    { path: '/inventory/suppliers', icon: Users, label: 'Suppliers', color: '#8b5cf6' },
+    { path: '/inventory/purchase-orders', icon: ShoppingBag, label: 'Purchase Orders', color: '#ec4899' },
+    { path: '/inventory/customer-orders', icon: ShoppingCart, label: 'Customer Orders', color: '#14b8a6' },
+    { path: '/inventory/reports', icon: FileText, label: 'Reports', color: '#6366f1' }
   ]
-
-  // COMMENTED OUT FOR STATIC HOSTING - Show all modules
-  // const accessibleModules = modules.filter(m => hasAccess(m.module))
-  const accessibleModules = modules // Show all modules for static hosting
-
-  if (!stats) return <div>Loading...</div>
 
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Welcome back, {user?.name}!</h1>
-        <div className="period-selector">
-          <button
-            className={selectedPeriod === 'month' ? 'active' : ''}
-            onClick={() => setSelectedPeriod('month')}
-          >
-            This Month
-          </button>
-          <button
-            className={selectedPeriod === 'year' ? 'active' : ''}
-            onClick={() => setSelectedPeriod('year')}
-          >
-            This Year
-          </button>
-        </div>
+        <h1>Inventory Management System</h1>
       </div>
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>
+          <div className="stat-icon" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>
             <TrendingUp size={24} />
           </div>
           <div className="stat-content">
-            <p className="stat-label">Total Revenue</p>
-            <p className="stat-value">₹{stats.revenue.toLocaleString()}</p>
+            <p className="stat-label">Total Spending</p>
+            <p className="stat-value">₹{totalSpending.toLocaleString()}</p>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-icon" style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-            <ShoppingCart size={24} />
+            <TrendingUp size={24} />
           </div>
           <div className="stat-content">
-            <p className="stat-label">Orders</p>
-            <p className="stat-value">{stats.orders}</p>
+            <p className="stat-label">Total Revenue</p>
+            <p className="stat-value">₹{totalRevenue.toLocaleString()}</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
+          <div className="stat-icon" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>
             <Package size={24} />
           </div>
           <div className="stat-content">
-            <p className="stat-label">Products</p>
-            <p className="stat-value">{stats.products}</p>
+            <p className="stat-label">Inventory Value</p>
+            <p className="stat-value">₹{totalInventoryValue.toLocaleString()}</p>
           </div>
         </div>
         <div className="stat-card">
@@ -89,36 +68,38 @@ const Dashboard = () => {
           </div>
           <div className="stat-content">
             <p className="stat-label">Low Stock Alerts</p>
-            <p className="stat-value">{stats.lowStock}</p>
+            <p className="stat-value">{lowStockItems.length}</p>
           </div>
         </div>
       </div>
 
       <div className="modules-grid">
-        {accessibleModules.map((module) => (
+        {quickActions.map((action) => (
           <div
-            key={module.path}
+            key={action.path}
             className="module-card"
-            onClick={() => navigate(module.path)}
-            style={{ borderLeft: `4px solid ${module.color}` }}
+            onClick={() => navigate(action.path)}
+            style={{ borderLeft: `4px solid ${action.color}` }}
           >
-            <module.icon size={32} color={module.color} />
-            <h3>{module.label}</h3>
+            <action.icon size={32} color={action.color} />
+            <h3>{action.label}</h3>
           </div>
         ))}
       </div>
 
-      <div className="dashboard-alerts">
-        <h2>Recent Alerts</h2>
-        <div className="alerts-list">
-          {stats.alerts.map((alert, idx) => (
-            <div key={idx} className="alert-item">
-              <AlertCircle size={18} color={alert.type === 'warning' ? '#f59e0b' : '#ef4444'} />
-              <span>{alert.message}</span>
-            </div>
-          ))}
+      {lowStockItems.length > 0 && (
+        <div className="dashboard-alerts">
+          <h2>Low Stock Alerts</h2>
+          <div className="alerts-list">
+            {lowStockItems.slice(0, 5).map((item, idx) => (
+              <div key={idx} className="alert-item">
+                <AlertCircle size={18} color="#ef4444" />
+                <span>{item.productId} - {item.name}: {item.stock} {item.unit} (Min: {item.minStock})</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
