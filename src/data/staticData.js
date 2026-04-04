@@ -45,9 +45,9 @@ export const packaging = [
 
 // Damaged/Scrap Items
 export const damagedItems = [
-  { id: 1, productCode: 'RBR-117', productName: 'Round Bottom Flask', quantity: 5, reason: 'Broken during production', date: '2024-01-15', location: 'Warehouse A', status: 'scrap' },
+  { id: 1, productCode: 'RBR-117', productName: 'Round Bottom Flask', quantity: 5, reason: 'Broken during production', date: '2024-01-15', location: 'Shelf A', status: 'scrap' },
   { id: 2, productCode: 'RB-121', productName: 'Three-Neck Round Bottom Flask', quantity: 2, reason: 'Quality defect', date: '2024-01-18', location: 'Production', status: 'damaged' },
-  { id: 3, productCode: 'OUT-001', productName: 'Single Outlet Tube', quantity: 10, reason: 'Transport damage', date: '2024-01-20', location: 'Warehouse B', status: 'scrap' }
+  { id: 3, productCode: 'OUT-001', productName: 'Single Outlet Tube', quantity: 10, reason: 'Transport damage', date: '2024-01-20', location: 'Shelf B', status: 'scrap' }
 ]
 
 // Suppliers

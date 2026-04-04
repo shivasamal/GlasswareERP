@@ -1,15 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Package, Plus, Edit, Trash2, Search } from 'lucide-react'
-import { getRawMaterials } from '../../../data/inventoryData'
+import { getRawMaterials, getSuppliers } from '../../../data/inventoryData'
 import './RawMaterials.css'
 
 const RawMaterials = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [materials, setMaterials] = useState(getRawMaterials())
+  const [suppliers] = useState(getSuppliers())
   const [showModal, setShowModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [stockFilter, setStockFilter] = useState(() => {
+    // Initialize from URL parameter if present
+    const filterParam = searchParams.get('filter')
+    return filterParam === 'low_stock' ? 'low_stock' : 'all'
+  })
   const [editingMaterial, setEditingMaterial] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+
+  // Update filter when URL parameter changes
+  useEffect(() => {
+    const filterParam = searchParams.get('filter')
+    if (filterParam === 'low_stock') {
+      setStockFilter('low_stock')
+    } else if (filterParam === 'inhouse') {
+      setStockFilter('inhouse')
+    } else if (filterParam === 'supplier_materials') {
+      setStockFilter('supplier_materials')
+    } else {
+      setStockFilter('all')
+    }
+  }, [searchParams])
 
   const [formData, setFormData] = useState({
     productId: '',
@@ -21,13 +43,22 @@ const RawMaterials = () => {
     unit: 'pcs',
     price: '',
     supplierId: '',
-    location: ''
+    location: '',
+    source: 'supplier' // 'supplier' or 'inhouse'
   })
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (editingMaterial) {
-      setMaterials(materials.map(m => m.id === editingMaterial.id ? { ...m, ...formData, stock: parseInt(formData.stock), minStock: parseInt(formData.minStock), price: parseFloat(formData.price), supplierId: parseInt(formData.supplierId) } : m))
+      setMaterials(materials.map(m => m.id === editingMaterial.id ? { 
+        ...m, 
+        ...formData, 
+        stock: parseInt(formData.stock), 
+        minStock: parseInt(formData.minStock), 
+        price: parseFloat(formData.price), 
+        supplierId: formData.source === 'supplier' ? parseInt(formData.supplierId) : null,
+        source: formData.source
+      } : m))
     } else {
       const newMaterial = {
         id: materials.length + 1,
@@ -35,7 +66,8 @@ const RawMaterials = () => {
         stock: parseInt(formData.stock),
         minStock: parseInt(formData.minStock),
         price: parseFloat(formData.price),
-        supplierId: parseInt(formData.supplierId),
+        supplierId: formData.source === 'supplier' ? parseInt(formData.supplierId) : null,
+        source: formData.source,
         status: 'active'
       }
       setMaterials([newMaterial, ...materials])
@@ -56,7 +88,8 @@ const RawMaterials = () => {
       unit: material.unit,
       price: material.price.toString(),
       supplierId: material.supplierId?.toString() || '',
-      location: material.location || ''
+      location: material.location || '',
+      source: material.source || (material.supplierId ? 'supplier' : 'inhouse')
     })
     setShowModal(true)
   }
@@ -67,10 +100,29 @@ const RawMaterials = () => {
     }
   }
 
-  const filteredMaterials = materials.filter(m =>
-    m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.productId.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredMaterials = materials.filter(m => {
+    // Search filter
+    const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      m.productId.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    if (!matchesSearch) return false
+
+    // Stock filter
+    if (stockFilter === 'low_stock') {
+      return m.stock < m.minStock
+    } else if (stockFilter === 'supplier_materials') {
+      // Check if material is from supplier
+      const source = m.source || (m.supplierId ? 'supplier' : 'inhouse')
+      return source === 'supplier'
+    } else if (stockFilter === 'inhouse') {
+      // Check if material is inhouse
+      const source = m.source || (m.supplierId ? 'supplier' : 'inhouse')
+      return source === 'inhouse'
+    }
+    
+    // 'all' filter - show all materials
+    return true
+  })
 
   const paginatedMaterials = filteredMaterials.slice(
     (currentPage - 1) * itemsPerPage,
@@ -98,7 +150,8 @@ const RawMaterials = () => {
             unit: 'pcs',
             price: '',
             supplierId: '',
-            location: ''
+            location: '',
+            source: 'supplier'
           })
           setShowModal(true)
         }}>
@@ -107,14 +160,35 @@ const RawMaterials = () => {
         </button>
       </div>
 
-      <div className="search-bar">
-        <Search size={20} />
-        <input
-          type="text"
-          placeholder="Search materials..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="filters">
+        <div className="search-bar">
+          <Search size={20} />
+          <input
+            type="text"
+            placeholder="Search materials..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <select 
+          value={stockFilter} 
+          onChange={(e) => {
+            setStockFilter(e.target.value)
+            setCurrentPage(1) // Reset to first page when filter changes
+            // Update URL parameter
+            if (e.target.value === 'low_stock') {
+              setSearchParams({ filter: 'low_stock' })
+            } else {
+              setSearchParams({}) // Remove filter param for 'all'
+            }
+          }}
+          className="filter-select"
+        >
+          <option value="all">All</option>
+          <option value="low_stock">Low Stock</option>
+          <option value="supplier_materials">Supplier Materials</option>
+          <option value="inhouse">Inhouse</option>
+        </select>
       </div>
 
       <div className="table-container">
@@ -124,6 +198,7 @@ const RawMaterials = () => {
               <th>Product ID</th>
               <th>Name</th>
               <th>Category</th>
+              <th>Source</th>
               <th>Stock</th>
               <th>Min Stock</th>
               <th>Unit Price</th>
@@ -134,34 +209,53 @@ const RawMaterials = () => {
           <tbody>
             {paginatedMaterials.length === 0 ? (
               <tr>
-                <td colSpan="8" className="empty-state">No raw materials found</td>
+                <td colSpan="9" className="empty-state">No raw materials found</td>
               </tr>
             ) : (
-              paginatedMaterials.map((material) => (
-                <tr key={material.id}>
-                  <td><strong>{material.productId}</strong></td>
-                  <td>{material.name}</td>
-                  <td>{material.category}</td>
-                  <td>
-                    <span className={material.stock <= material.minStock ? 'low-stock' : ''}>
-                      {material.stock} {material.unit}
-                    </span>
-                  </td>
-                  <td>{material.minStock} {material.unit}</td>
-                  <td>₹{material.price}</td>
-                  <td>{material.location}</td>
-                  <td>
-                    <div className="action-buttons">
-                      <button className="btn-icon" onClick={() => handleEdit(material)} title="Edit">
-                        <Edit size={16} />
-                      </button>
-                      <button className="btn-icon" onClick={() => handleDelete(material.id)} title="Delete">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+              paginatedMaterials.map((material) => {
+                const source = material.source || (material.supplierId ? 'supplier' : 'inhouse')
+                const isLowStock = material.stock < material.minStock
+                return (
+                  <tr 
+                    key={material.id} 
+                    className={isLowStock ? 'low-stock-row' : ''}
+                  >
+                    <td><strong>{material.productId}</strong></td>
+                    <td>{material.name}</td>
+                    <td>{material.category}</td>
+                    <td>
+                      <span className={`source-badge ${source === 'inhouse' ? 'source-inhouse' : 'source-supplier'}`}>
+                        {source === 'inhouse' ? 'Inhouse' : 'Supplier'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="stock-cell">
+                        <span className={isLowStock ? 'low-stock' : ''}>
+                          {material.stock} {material.unit}
+                        </span>
+                        {isLowStock && (
+                          <span className="low-stock-indicator" title="Low Stock Alert">
+                            ⚠️
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td>{material.minStock} {material.unit}</td>
+                    <td>₹{material.price}</td>
+                    <td>{material.location}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button className="btn-icon" onClick={() => handleEdit(material)} title="Edit">
+                          <Edit size={16} />
+                        </button>
+                        <button className="btn-icon" onClick={() => handleDelete(material.id)} title="Delete">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })
             )}
           </tbody>
         </table>
@@ -269,10 +363,45 @@ const RawMaterials = () => {
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    placeholder="Warehouse A"
+                    placeholder="Shelf A"
                   />
                 </div>
               </div>
+              <div className="form-group">
+                <label>Source *</label>
+                <select
+                  value={formData.source}
+                  onChange={(e) => {
+                    const newSource = e.target.value
+                    setFormData({ 
+                      ...formData, 
+                      source: newSource,
+                      supplierId: newSource === 'supplier' ? formData.supplierId : ''
+                    })
+                  }}
+                  required
+                >
+                  <option value="supplier">Supplier Material</option>
+                  <option value="inhouse">Inhouse Material</option>
+                </select>
+              </div>
+              {formData.source === 'supplier' && (
+                <div className="form-group">
+                  <label>Supplier *</label>
+                  <select
+                    value={formData.supplierId}
+                    onChange={(e) => setFormData({ ...formData, supplierId: e.target.value })}
+                    required={formData.source === 'supplier'}
+                  >
+                    <option value="">Select Supplier</option>
+                    {suppliers.map(supplier => (
+                      <option key={supplier.id} value={supplier.id}>
+                        {supplier.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div className="form-group">
                 <label>Description</label>
                 <textarea

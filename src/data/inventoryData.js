@@ -1,12 +1,26 @@
 // Enhanced Inventory Data Structure
 
-// Raw Materials (items purchased from suppliers)
+// Raw Materials (items purchased from suppliers and made in-house)
 export const rawMaterials = [
-  { id: 1, productId: 'RM-001', name: 'Glass Tube', description: 'Standard glass tube for manufacturing', category: 'Raw Material', stock: 500, minStock: 100, unit: 'pcs', price: 50, supplierId: 1, status: 'active', location: 'Warehouse A' },
-  { id: 2, productId: 'RM-002', name: 'Outlet Tube', description: 'Single outlet tube component', category: 'Component', stock: 200, minStock: 50, unit: 'pcs', price: 25, supplierId: 1, status: 'active', location: 'Warehouse A' },
-  { id: 3, productId: 'RM-003', name: 'Neck Joint', description: 'Additional neck joint for customization', category: 'Component', stock: 100, minStock: 30, unit: 'pcs', price: 35, supplierId: 2, status: 'active', location: 'Warehouse B' },
-  { id: 4, productId: 'RM-004', name: 'Flask Cap', description: 'Standard cap for flask opening', category: 'Component', stock: 300, minStock: 80, unit: 'pcs', price: 15, supplierId: 2, status: 'active', location: 'Warehouse B' },
-  { id: 5, productId: 'RM-005', name: 'Bubble Wrap', description: 'Protective bubble wrap', category: 'Packaging', stock: 500, minStock: 100, unit: 'sqm', price: 2, supplierId: 3, status: 'active', location: 'Warehouse C' }
+  // Supplier Materials
+  { id: 1, productId: 'RM-001', name: 'Glass Tube', description: 'Standard glass tube for manufacturing', category: 'Raw Material', stock: 500, minStock: 100, unit: 'pcs', price: 50, supplierId: 1, status: 'active', location: 'Shelf A', source: 'supplier' },
+  { id: 2, productId: 'RM-002', name: 'Outlet Tube', description: 'Single outlet tube component', category: 'Component', stock: 200, minStock: 50, unit: 'pcs', price: 25, supplierId: 1, status: 'active', location: 'Shelf A', source: 'supplier' },
+  { id: 3, productId: 'RM-003', name: 'Neck Joint', description: 'Additional neck joint for customization', category: 'Component', stock: 100, minStock: 30, unit: 'pcs', price: 35, supplierId: 2, status: 'active', location: 'Shelf B', source: 'supplier' },
+  { id: 4, productId: 'RM-004', name: 'Flask Cap', description: 'Standard cap for flask opening', category: 'Component', stock: 300, minStock: 80, unit: 'pcs', price: 15, supplierId: 2, status: 'active', location: 'Shelf B', source: 'supplier' },
+  { id: 5, productId: 'RM-005', name: 'Bubble Wrap', description: 'Protective bubble wrap', category: 'Packaging', stock: 500, minStock: 100, unit: 'sqm', price: 2, supplierId: 3, status: 'active', location: 'Shelf C', source: 'supplier' },
+  // Low Stock Supplier Materials
+  { id: 6, productId: 'RM-006', name: 'Glass Rod', description: 'Glass rod for manufacturing', category: 'Raw Material', stock: 45, minStock: 50, unit: 'pcs', price: 30, supplierId: 1, status: 'active', location: 'Shelf A', source: 'supplier' },
+  { id: 7, productId: 'RM-007', name: 'Sealing Ring', description: 'Rubber sealing ring', category: 'Component', stock: 20, minStock: 40, unit: 'pcs', price: 8, supplierId: 2, status: 'active', location: 'Shelf B', source: 'supplier' },
+  { id: 8, productId: 'RM-008', name: 'Connector Tube', description: 'Connector tube for assembly', category: 'Component', stock: 15, minStock: 30, unit: 'pcs', price: 18, supplierId: 3, status: 'active', location: 'Shelf C', source: 'supplier' },
+  // Inhouse Materials
+  { id: 9, productId: 'RM-009', name: 'Custom Glass Mold', description: 'In-house manufactured glass mold', category: 'Tooling', stock: 25, minStock: 10, unit: 'pcs', price: 200, supplierId: null, status: 'active', location: 'Shelf A', source: 'inhouse' },
+  { id: 10, productId: 'RM-010', name: 'Metal Base Plate', description: 'Manufactured metal base plate', category: 'Component', stock: 150, minStock: 50, unit: 'pcs', price: 45, supplierId: null, status: 'active', location: 'Shelf B', source: 'inhouse' },
+  { id: 11, productId: 'RM-011', name: 'Custom Label', description: 'In-house printed labels', category: 'Packaging', stock: 2000, minStock: 500, unit: 'pcs', price: 0.5, supplierId: null, status: 'active', location: 'Shelf C', source: 'inhouse' },
+  { id: 12, productId: 'RM-012', name: 'Welded Joint', description: 'Custom welded joint component', category: 'Component', stock: 80, minStock: 30, unit: 'pcs', price: 60, supplierId: null, status: 'active', location: 'Shelf A', source: 'inhouse' },
+  // Low Stock Inhouse Materials
+  { id: 13, productId: 'RM-013', name: 'Custom Glass Cutter', description: 'In-house glass cutting tool', category: 'Tooling', stock: 5, minStock: 10, unit: 'pcs', price: 150, supplierId: null, status: 'active', location: 'Shelf B', source: 'inhouse' },
+  { id: 14, productId: 'RM-014', name: 'Polishing Compound', description: 'In-house prepared polishing compound', category: 'Raw Material', stock: 8, minStock: 20, unit: 'kg', price: 25, supplierId: null, status: 'active', location: 'Shelf C', source: 'inhouse' },
+  { id: 15, productId: 'RM-015', name: 'Custom Packaging Box', description: 'In-house manufactured packaging boxes', category: 'Packaging', stock: 120, minStock: 200, unit: 'pcs', price: 12, supplierId: null, status: 'active', location: 'Shelf A', source: 'inhouse' }
 ]
 
 // Finished Goods (products ready for sale)
@@ -290,7 +304,7 @@ export const customers = [
 // Damaged Items Tracking
 export const damagedItems = [
   { id: 1, productId: 'FG-001', productName: 'Round Bottom Flask', quantity: 5, reason: 'Transport damage', date: '2024-01-25', location: 'Delivery', status: 'replaced', orderNumber: 'CO-2024-001' },
-  { id: 2, productId: 'RM-002', productName: 'Outlet Tube', quantity: 5, reason: 'Transport damage from supplier', date: '2024-01-23', location: 'Warehouse A', status: 'reported', orderNumber: 'PO-2024-002' },
+  { id: 2, productId: 'RM-002', productName: 'Outlet Tube', quantity: 5, reason: 'Transport damage from supplier', date: '2024-01-23', location: 'Shelf A', status: 'reported', orderNumber: 'PO-2024-002' },
   { id: 3, productId: 'FG-001', productName: 'Round Bottom Flask', quantity: 2, reason: 'Quality defect', date: '2024-01-18', location: 'Production', status: 'scrap' }
 ]
 

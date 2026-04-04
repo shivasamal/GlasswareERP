@@ -133,7 +133,11 @@ const InventoryDashboard = () => {
             <p className="stat-value">{rawMaterials.length + finishedGoods.length}</p>
           </div>
         </div>
-        <div className="stat-card">
+        <div 
+          className="stat-card clickable" 
+          onClick={() => navigate('/inventory/raw-materials?filter=low_stock')}
+          style={{ cursor: 'pointer' }}
+        >
           <div className="stat-icon" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>
             <AlertTriangle size={24} />
           </div>
@@ -230,10 +234,24 @@ const InventoryDashboard = () => {
 
       {lowStockItems.length > 0 && (
         <div className="alerts-section">
-          <h2>Low Stock Alerts</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h2>Low Stock Alerts</h2>
+            <button 
+              className="btn-primary" 
+              onClick={() => navigate('/inventory/raw-materials?filter=low_stock')}
+              style={{ padding: '8px 16px', fontSize: '14px' }}
+            >
+              View All Low Stock Items
+            </button>
+          </div>
           <div className="alerts-list">
             {lowStockItems.map((item, idx) => (
-              <div key={idx} className="alert-item">
+              <div 
+                key={idx} 
+                className="alert-item clickable"
+                onClick={() => navigate('/inventory/raw-materials?filter=low_stock')}
+                style={{ cursor: 'pointer' }}
+              >
                 <AlertTriangle size={18} color="#ef4444" />
                 <div>
                   <strong>{item.productId} - {item.name}</strong>

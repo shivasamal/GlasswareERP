@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Package, Eye, CheckCircle, XCircle, Upload, FileText, Search, Plus, AlertTriangle, Download, Bell, X } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Package, Eye, CheckCircle, XCircle, Upload, FileText, Search, Plus, AlertTriangle, Download, Bell, X, Camera } from 'lucide-react'
 import { getPurchaseOrders, getSuppliers, getRawMaterials } from '../../../data/inventoryData'
 import { useAuth } from '../../../contexts/AuthContext'
 import './PurchaseOrders.css'
@@ -19,6 +19,10 @@ const PurchaseOrders = () => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+  const [showCameraModal, setShowCameraModal] = useState(false)
+  const [cameraStream, setCameraStream] = useState(null)
+  const videoRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   const [formData, setFormData] = useState({
     supplierId: '',
@@ -188,7 +192,7 @@ const PurchaseOrders = () => {
             newCategory: 'Raw Material',
             newUnit: 'pcs',
             newMinStock: 10,
-            newLocation: 'Warehouse A',
+            newLocation: 'Shelf A',
             newDescription: ''
           }
         })
@@ -224,7 +228,7 @@ const PurchaseOrders = () => {
           unit: item.newUnit || 'pcs',
           price: item.unitPrice,
           supplierId: selectedOrder.supplierId,
-          location: item.newLocation || 'Warehouse A'
+          location: item.newLocation || 'Shelf A'
         })
       } else if (item.action === 'add_existing' && item.selectedProductId) {
         // Add to existing raw material
@@ -347,6 +351,71 @@ Generated on: ${new Date().toLocaleString('en-IN')}
     })
   }
 
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' } // Use back camera on mobile
+      })
+      setCameraStream(stream)
+      setShowCameraModal(true)
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error)
+      alert('Unable to access camera. Please check permissions or use file upload instead.')
+    }
+  }
+
+  const capturePhoto = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas')
+      canvas.width = videoRef.current.videoWidth
+      canvas.height = videoRef.current.videoHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(videoRef.current, 0, 0)
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const file = new File([blob], `invoice_${Date.now()}.jpg`, { type: 'image/jpeg' })
+          handleInvoiceUpload(file)
+        }
+      }, 'image/jpeg', 0.9)
+    }
+    closeCamera()
+  }
+
+  const closeCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop())
+      setCameraStream(null)
+    }
+    setShowCameraModal(false)
+  }
+
+  const handleInvoiceUpload = (file) => {
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const updatedOrders = orders.map(order => {
+          if (order.id === selectedOrder.id) {
+            return {
+              ...order,
+              invoiceFile: { name: file.name, data: event.target.result }
+            }
+          }
+          return order
+        })
+        setOrders(updatedOrders)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleFileUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.supplierName?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -391,6 +460,22 @@ Generated on: ${new Date().toLocaleString('en-IN')}
     }
   }, [orders])
 
+  // Cleanup camera stream when inspection modal closes
+  useEffect(() => {
+    if (!showInspectionModal && cameraStream) {
+      closeCamera()
+    }
+  }, [showInspectionModal])
+
+  // Cleanup camera stream on unmount
+  useEffect(() => {
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop())
+      }
+    }
+  }, [cameraStream])
+
   return (
     <div className="purchase-orders">
       {/* Notifications */}
@@ -427,7 +512,7 @@ Generated on: ${new Date().toLocaleString('en-IN')}
                           newCategory: 'Raw Material',
                           newUnit: 'pcs',
                           newMinStock: 10,
-                          newLocation: 'Warehouse A',
+                          newLocation: 'Shelf A',
                           newDescription: ''
                         }
                       })
@@ -881,32 +966,41 @@ Generated on: ${new Date().toLocaleString('en-IN')}
 
               <div className="form-group">
                 <label>Upload Supplier Invoice</label>
-                <div className="file-upload">
+                <div className="upload-options">
+                  <button
+                    type="button"
+                    className="upload-option-btn camera-btn"
+                    onClick={openCamera}
+                  >
+                    <Camera size={20} />
+                    <span>Open Camera</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="upload-option-btn file-btn"
+                    onClick={handleFileUploadClick}
+                  >
+                    <Upload size={20} />
+                    <span>Upload PDF/File</span>
+                  </button>
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                     onChange={(e) => {
                       if (e.target.files[0]) {
-                        const reader = new FileReader()
-                        reader.onload = (event) => {
-                          const updatedOrders = orders.map(order => {
-                            if (order.id === selectedOrder.id) {
-                              return {
-                                ...order,
-                                invoiceFile: { name: e.target.files[0].name, data: event.target.result }
-                              }
-                            }
-                            return order
-                          })
-                          setOrders(updatedOrders)
-                        }
-                        reader.readAsDataURL(e.target.files[0])
+                        handleInvoiceUpload(e.target.files[0])
                       }
                     }}
+                    style={{ display: 'none' }}
                   />
-                  <Upload size={18} />
-                  <span>PDF, DOC, DOCX, or Image</span>
                 </div>
+                {selectedOrder?.invoiceFile && (
+                  <div className="uploaded-file-info">
+                    <FileText size={16} />
+                    <span>{selectedOrder.invoiceFile.name}</span>
+                  </div>
+                )}
               </div>
 
               <div className="form-group">
@@ -1085,13 +1179,13 @@ Generated on: ${new Date().toLocaleString('en-IN')}
                             <label>Location</label>
                             <input
                               type="text"
-                              value={item.newLocation || 'Warehouse A'}
+                              value={item.newLocation || 'Shelf A'}
                               onChange={(e) => {
                                 const updated = [...excessItemsToAdd]
                                 updated[idx].newLocation = e.target.value
                                 setExcessItemsToAdd(updated)
                               }}
-                              placeholder="Warehouse A"
+                              placeholder="Shelf A"
                             />
                           </div>
                         </div>
@@ -1128,6 +1222,42 @@ Generated on: ${new Date().toLocaleString('en-IN')}
                   )}
                 >
                   Add to Inventory
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Camera Modal */}
+      {showCameraModal && (
+        <div className="modal-overlay" onClick={closeCamera}>
+          <div className="modal-content camera-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Capture Invoice Photo</h2>
+              <button className="modal-close" onClick={closeCamera}>×</button>
+            </div>
+            <div className="camera-content">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="camera-video"
+              />
+              <div className="camera-actions">
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={closeCamera}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={capturePhoto}
+                >
+                  Capture Photo
                 </button>
               </div>
             </div>

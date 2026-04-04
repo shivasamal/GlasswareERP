@@ -28,7 +28,7 @@ The Inventory Management System is a comprehensive solution for managing:
    - Minimum stock level
    - Unit (pcs, kg, sqm)
    - Unit price
-   - Location (e.g., Warehouse A)
+   - Location (e.g., Shelf A)
    - Supplier ID (if purchased from supplier)
 4. Save
 

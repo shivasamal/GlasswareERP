@@ -286,7 +286,7 @@ const CustomerOrders = () => {
           newCategory: 'Raw Material',
           newUnit: 'pcs',
           newMinStock: 10,
-          newLocation: 'Warehouse A',
+          newLocation: 'Shelf A',
           newDescription: '',
           newPrice: 0
         }
@@ -418,7 +418,7 @@ const CustomerOrders = () => {
             newCategory: 'Raw Material',
             newUnit: 'pcs',
             newMinStock: 10,
-            newLocation: 'Warehouse A',
+            newLocation: 'Shelf A',
             newDescription: '',
             newPrice: 0
           }

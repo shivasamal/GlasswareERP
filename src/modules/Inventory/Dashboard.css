@@ -49,6 +49,11 @@
   box-shadow: var(--card-shadow-hover);
 }
 
+.stat-card.clickable:hover {
+  background-color: var(--bg-secondary);
+  cursor: pointer;
+}
+
 .stat-icon {
   width: 56px;
   height: 56px;
@@ -174,5 +179,15 @@
 .alert-item p {
   font-size: 14px;
   color: var(--text-secondary);
+}
+
+.alert-item.clickable {
+  transition: all 0.2s;
+}
+
+.alert-item.clickable:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+  transform: translateX(4px);
+  cursor: pointer;
 }
 
